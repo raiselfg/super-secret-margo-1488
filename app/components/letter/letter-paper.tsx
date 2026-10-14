@@ -41,7 +41,7 @@ export default function LetterPaper({ content, headingRef, visibleCount, endingV
         className="letter-greeting"
         initial={instant ? false : { opacity: 0, y: 6 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: instant ? 0 : 0.8, delay: instant ? 0 : 0.65 }}
+        transition={{ duration: instant ? 0 : 0.8, delay: instant ? 0 : revealTiming.unfold }}
       >{content.greeting}</motion.h1>
       {/* Keep the complete text in the DOM; the reading rhythm is purely visual. */}
       <div className="letter-body">
@@ -123,7 +123,7 @@ export default function LetterPaper({ content, headingRef, visibleCount, endingV
           }}
           transition={{ duration: instant ? 0 : 1.5, delay: instant ? 0 : 0.35, ease: "easeInOut" }}
         >
-          <Image src={content.illustration} alt={content.illustrationAlt} width={150} height={180} />
+          <Image src={content.illustration} alt={content.illustrationAlt} width={225} height={270} sizes="(max-width: 600px) 187.5px, 217.5px" />
           <figcaption>{content.illustrationCaption}</figcaption>
         </motion.figure>
       </div>

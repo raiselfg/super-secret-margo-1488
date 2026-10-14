@@ -304,7 +304,6 @@
   opacity: .55;
 }
 
-/* Shadows belong to the resting sheet, outside its unfolding clip. */
 .paper-rest {
   position: relative;
   isolation: isolate;
@@ -451,21 +450,55 @@
   position: relative;
   margin: 20px 0 0;
   width: 100%;
-  max-width: 185px;
+  max-width: 277.5px;
   min-width: 0;
+  z-index: 10;
+}
+
+.letter-illustration::after {
+  content: '';
+  position: absolute;
+  inset: -10px -10px -12px;
+  z-index: -1;
+  pointer-events: none;
+  border: 1px solid #c7b99d55;
+  background: linear-gradient(145deg, #fffdf5, #f5efdf);
+  box-shadow: 2px 5px 9px #49351f24, 0 1px 2px #49351f18;
+}
+
+.letter-illustration::before {
+  content: '';
+  position: absolute;
+  top: -23px;
+  left: 50%;
+  z-index: 1;
+  width: 42%;
+  height: 30px;
+  pointer-events: none;
+  transform: translateX(-50%) rotate(-8deg);
+  background: linear-gradient(100deg, #d9bf8470, #eddbab99 45%, #d9bf846b);
+  border-block: 1px solid #fff5;
+  box-shadow: 0 2px 3px #49351f12;
+  clip-path: polygon(2% 0, 98% 2%, 100% 14%, 98% 29%, 100% 43%, 98% 58%, 100% 75%, 98% 100%, 1% 98%, 3% 83%, 0 67%, 2% 49%, 0 31%);
 }
 
 .letter-illustration img {
+  display: block;
   width: 100%;
   height: auto;
-  max-height: 280px;
+  max-height: 420px;
   object-fit: contain;
+  box-shadow: inset 0 0 0 1px #49351f12;
 }
 
 .letter-illustration figcaption {
+  margin-top: 12px;
+  padding-inline: 3px;
   text-align: center;
-  color: #9f806b;
-  font: 15px var(--font-hand), cursive;
+  overflow-wrap: anywhere;
+  color: #80644e;
+  font: 20px/1.15 var(--font-hand), cursive;
+  transform: rotate(-2deg);
 }
 
 .fold {
@@ -513,10 +546,9 @@
   margin-left: 12px;
 }
 
-/* The closing area stays in normal flow, even with a long signature. */
 .paper-bottom {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(100px, 145px);
+  grid-template-columns: minmax(0, 1fr) minmax(150px, 217.5px);
   align-items: end;
   gap: clamp(16px, 3vw, 32px);
 }
@@ -551,7 +583,7 @@
 
   .letter-illustration {
     justify-self: end;
-    width: 125px;
+    width: min(187.5px, 100%);
   }
 
   .reading-toolbar {
@@ -572,7 +604,6 @@
   }
 }
 
-/* Compact the scene on laptops and phones held horizontally. Scroll remains available. */
 @media (max-height: 850px) and (min-width: 601px) {
   .masthead {
     padding-block: 16px;
@@ -612,12 +643,10 @@
   }
 }
 
-/* Decorative layers must never intercept the envelope button's touch target. */
 .envelope > span {
   pointer-events: none;
 }
 
-/* Two paper faces share a hinge; only the facing side is visible. */
 .flap-face {
   position: absolute;
   inset: 0;
@@ -631,7 +660,6 @@
 }
 
 .flap-inside {
-  /* Flip the normal without moving the triangular outline off its hinge. */
   transform: rotateY(180deg);
   background: linear-gradient(180deg, #b49a75, #dcc8a7 55%, #e6d7ba);
 }
@@ -702,7 +730,6 @@
   box-shadow: 0 1px 1px #fff3;
 }
 
-/* The sheet in the envelope uses the same stock as the unfolded letter. */
 .letter-peek {
   background-color: #f1ecdf;
 }

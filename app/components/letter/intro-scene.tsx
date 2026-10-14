@@ -18,7 +18,7 @@ export default function IntroScene({ stage, content, reduced, onOpen }: IntroSce
       <motion.div className="intro-copy" animate={{ opacity: stage === "closed" ? 1 : 0 }} transition={{ duration: reduced ? 0 : 0.3 }}>
         <h1>Для тебя<span className="title-dot">.</span></h1>
       </motion.div>
-      <Envelope buttonRef={button} onOpen={onOpen} stage={stage} recipient={content.recipient} greeting={content.greeting} />
+      <Envelope buttonRef={button} onOpen={onOpen} stage={stage} recipient={content.recipient} />
     </motion.section>
   );
 }

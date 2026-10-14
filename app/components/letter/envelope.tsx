@@ -7,11 +7,10 @@ type EnvelopeProps = {
   buttonRef: RefObject<HTMLButtonElement | null>;
   onOpen: () => void;
   recipient: string;
-  greeting: string;
 };
 
 export default function Envelope({
-  stage, buttonRef, onOpen, recipient, greeting,
+  stage, buttonRef, onOpen, recipient,
 }: EnvelopeProps) {
   const closed = stage === "closed";
   const lifting = stage === "lift";
@@ -53,7 +52,6 @@ export default function Envelope({
             }}
             transition={{ duration: openingTiming.lift, times: [0, 0.22, 0.78, 1], ease: [0.4, 0, 0.2, 1] }}
           >
-            <span>{greeting}</span><span /><span /><span />
             <i className="peek-fold" />
           </motion.span>
           <motion.span
