@@ -1,4 +1,4 @@
-import Image from "next/image";
+import LetterPhoto from "./letter-photo";
 import { motion } from "motion/react";
 import type { RefObject } from "react";
 import type { LetterContent } from "../../content/letter";
@@ -123,7 +123,7 @@ export default function LetterPaper({ content, headingRef, visibleCount, endingV
           }}
           transition={{ duration: instant ? 0 : 1.5, delay: instant ? 0 : 0.35, ease: "easeInOut" }}
         >
-          <Image src={content.illustration} alt={content.illustrationAlt} width={225} height={270} sizes="(max-width: 600px) 187.5px, 217.5px" />
+          <LetterPhoto content={content} visible={endingVisible} />
           <figcaption>{content.illustrationCaption}</figcaption>
         </motion.figure>
       </div>

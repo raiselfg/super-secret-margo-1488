@@ -19,6 +19,12 @@ export default function IntroScene({ stage, content, reduced, onOpen }: IntroSce
         <h1>Для тебя<span className="title-dot">.</span></h1>
       </motion.div>
       <Envelope buttonRef={button} onOpen={onOpen} stage={stage} recipient={content.recipient} />
+      <motion.p
+        className="envelope-note"
+        initial={reduced ? false : { opacity: 0, y: 5 }}
+        animate={{ opacity: stage === "closed" ? 1 : 0, y: 0 }}
+        transition={{ duration: reduced ? 0 : 0.6, delay: stage === "closed" && !reduced ? 0.5 : 0 }}
+      >нажми на конверт — внутри письмо для тебя</motion.p>
     </motion.section>
   );
 }

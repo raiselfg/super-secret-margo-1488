@@ -756,3 +756,110 @@
     animation: none;
   }
 }
+
+.envelope-note {
+  max-width: 280px;
+  margin: 12px 0 0;
+  color: #c8b294;
+  font: 22px/1.25 var(--font-hand), cursive;
+  text-wrap: balance;
+  transform: rotate(-3deg);
+}
+
+.photo-trigger {
+  position: relative;
+  display: block;
+  width: 100%;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: zoom-in;
+  touch-action: manipulation;
+}
+
+.photo-trigger:focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: 4px;
+}
+
+.photo-hint {
+  position: absolute;
+  bottom: 8px;
+  right: 8px;
+  border-radius: 2px;
+  padding: 3px 7px;
+  background: #fff9eadb;
+  color: #63413e;
+  font: 16px/1.2 var(--font-hand), cursive;
+  pointer-events: none;
+}
+
+.photo-dialog {
+  width: min(600px, calc(100vw - 32px));
+  max-height: calc(100svh - 32px);
+  margin: auto;
+  padding: 18px;
+  border: 0;
+  background: transparent;
+  overflow: auto;
+  color: var(--ink);
+}
+
+.photo-dialog::backdrop {
+  background: #17110de0;
+  backdrop-filter: blur(8px);
+}
+
+body:has(.photo-dialog[open]) {
+  overflow: hidden;
+}
+
+.photo-dialog-card {
+  position: relative;
+  padding: 16px 16px 20px;
+  background: #fffaf0;
+  box-shadow: 0 12px 48px #0005;
+}
+
+.photo-dialog .photo-dialog-card img {
+  width: 100%;
+  height: auto;
+  max-height: 70svh;
+  object-fit: contain;
+}
+
+.photo-dialog-card p {
+  margin: 16px 0 0;
+  text-align: center;
+  overflow-wrap: anywhere;
+  font: 28px/1.2 var(--font-hand), cursive;
+}
+
+.photo-close {
+  position: absolute;
+  top: -14px;
+  right: -14px;
+  z-index: 1;
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: 1px solid #dbcdb9;
+  border-radius: 50%;
+  background: #fffaf0;
+  color: #63413e;
+  font: 28px/1 Arial, sans-serif;
+  cursor: pointer;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .photo-dialog[open] .photo-dialog-card {
+    animation: photo-arrive .3s ease-out both;
+  }
+
+  @keyframes photo-arrive {
+    from { opacity: 0; transform: translateY(12px) rotate(-2deg) scale(.97); }
+    to { opacity: 1; transform: translateY(0) rotate(0) scale(1); }
+  }
+}
