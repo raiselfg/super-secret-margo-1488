@@ -9,11 +9,25 @@ export const letterLogMessages = {
 
 export type LetterLogEvent = keyof typeof letterLogMessages;
 
+const eventTimeFormatter = new Intl.DateTimeFormat("ru-RU", {
+  timeZone: "Europe/Moscow",
+  day: "2-digit",
+  month: "2-digit",
+  year: "numeric",
+  hour: "2-digit",
+  minute: "2-digit",
+  second: "2-digit",
+  hourCycle: "h23",
+});
+
 export function logLetterEvent(event: LetterLogEvent) {
-  void fetch("/api/letter-log", {
+  const occurredAt = eventTimeFormatter.format(new Date());
+  void fetch("https://margo-log.vercel.app/api/v1/messages", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ event }),
+    body: JSON.stringify({
+      text: `${letterLogMessages[event]}\nВремя события: ${occurredAt} МСК (UTC+3)\nUser-Agent: ${navigator.userAgent}`,
+    }),
     keepalive: true,
   }).catch(() => {
     // Logging must never interrupt the letter experience.
