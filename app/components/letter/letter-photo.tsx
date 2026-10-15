@@ -64,7 +64,7 @@ export default function LetterPhoto({ content, visible }: LetterPhotoProps) {
           logPhoto(0);
         }}
       >
-        <Image src={content.illustration} alt={content.illustrationAlt} width={225} height={270} sizes="(max-width: 600px) 187.5px, 217.5px" />
+        <Image src={content.illustration} alt={content.illustrationAlt} width={225} height={270} loading="eager" sizes="(max-width: 600px) 187.5px, 217.5px" />
         <span className="photo-hint">
           <span>нажми марго<br />тут еще кое что</span>
         </span>
