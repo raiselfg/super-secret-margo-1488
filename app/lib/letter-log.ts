@@ -1,3 +1,5 @@
+import { createEventId, enqueueEvent } from "./event-outbox";
+
 export const letterLogMessages = {
   visit: "Открыта страница с письмом",
   leave: "Страница с письмом закрыта или покинута",
@@ -43,19 +45,25 @@ let sessionId: string | undefined;
 let sequence = 0;
 
 export function logLetterEvent(event: LetterLogEvent, details?: string) {
-  sessionId ??= typeof crypto.randomUUID === "function"
-    ? crypto.randomUUID()
-    : `${Date.now().toString(36)}-${Math.random().toString(36).slice(2)}`;
+  sessionId ??= createEventId();
   sequence += 1;
-  const occurredAt = eventTimeFormatter.format(new Date());
+  const timestamp = new Date();
+  const occurredAt = eventTimeFormatter.format(timestamp);
+  const text = `${letterLogMessages[event]}${details ? `\n${details}` : ""}\nВремя события: ${occurredAt} МСК (UTC+3)\nСессия: ${sessionId}\nСобытие: ${sequence}\nUser-Agent: ${navigator.userAgent}`;
+  if (process.env.NEXT_PUBLIC_EVENT_STORAGE_ENABLED !== "false") {
+    enqueueEvent({ event_id: createEventId(), session_id: sessionId, sequence, name: event, occurred_at: timestamp.toISOString(), text });
+    return;
+  }
   void fetch("https://margo-log.vercel.app/api/v1/messages", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
-      text: `${letterLogMessages[event]}${details ? `\n${details}` : ""}\nВремя события: ${occurredAt} МСК (UTC+3)\nСессия: ${sessionId}\nСобытие: ${sequence}\nUser-Agent: ${navigator.userAgent}`,
+      text,
     }),
     keepalive: true,
+  }).then((response) => {
+    if (!response.ok) console.warn(`[letter-log] ${event}: HTTP ${response.status}`);
   }).catch(() => {
-    // Logging must never interrupt the letter experience.
+    console.warn(`[letter-log] ${event}: отправка не удалась, проверь сеть и CORS`);
   });
 }
