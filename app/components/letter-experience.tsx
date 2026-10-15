@@ -1,7 +1,8 @@
 "use client";
 
 import { AnimatePresence, MotionConfig, useReducedMotion } from "motion/react";
-import { useEffect, useReducer } from "react";
+import { useEffect, useReducer, useRef } from "react";
+import { logLetterEvent } from "../lib/letter-log";
 import { letter } from "../content/letter";
 import { initialPlayback, openingTiming, playbackReducer } from "../lib/letter-playback";
 import "./letter/letter.css";
@@ -10,6 +11,7 @@ import ReadingScene from "./letter/reading-scene";
 
 export default function LetterExperience() {
   const [state, dispatch] = useReducer(playbackReducer, initialPlayback);
+  const opened = useRef(false);
   const reduced = !!useReducedMotion();
 
   useEffect(() => {
@@ -39,7 +41,12 @@ export default function LetterExperience() {
               stage={state.stage}
               content={letter}
               reduced={reduced}
-              onOpen={() => dispatch({ type: "open", reduced })}
+              onOpen={() => {
+                if (opened.current) return;
+                opened.current = true;
+                logLetterEvent("open");
+                dispatch({ type: "open", reduced });
+              }}
             />
           )}
         </AnimatePresence>
