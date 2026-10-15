@@ -88,7 +88,7 @@ export default function LetterPhoto({ content, visible }: LetterPhotoProps) {
           </div>
         ) : (
           <>
-        <p className="photo-reminder">марго обязательно долистай до конца пожалуйста ♥</p>
+        <p className="photo-reminder" aria-live="polite">{photos[index].caption}</p>
         <div className="photo-stack">
           <button type="button" className="photo-close" autoFocus onClick={() => dialog.current?.close()} aria-label="Закрыть фотографии">×</button>
           <div className="photo-dialog-card">
