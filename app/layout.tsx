@@ -1,15 +1,18 @@
 import type { Metadata } from "next";
-import { Geist, Caveat } from "next/font/google";
+import localFont from "next/font/local";
 import "./globals.css";
 
-const geistSans = Geist({
+const geistSans = localFont({
+  src: "./fonts/Geist.ttf",
+  weight: "100 900",
   variable: "--font-geist-sans",
-  subsets: ["latin"],
+  display: "swap",
 });
 
-const handwriting = Caveat({
+const handwriting = localFont({
+  src: "./fonts/Caveat.ttf",
+  weight: "400 700",
   variable: "--font-hand",
-  subsets: ["latin", "cyrillic"],
   display: "swap",
 });
 

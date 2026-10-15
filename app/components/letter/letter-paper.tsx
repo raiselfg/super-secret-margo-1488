@@ -1,8 +1,10 @@
 import LetterPhoto from "./letter-photo";
 import { motion } from "motion/react";
-import type { RefObject } from "react";
+import { useLayoutEffect, useRef, type CSSProperties, type RefObject } from "react";
 import type { LetterContent } from "../../content/letter";
 import { getWordStagger, revealTiming } from "../../lib/letter-playback";
+
+export type LetterOrigin = { left: number; top: number; width: number; height: number };
 
 type LetterPaperProps = {
   content: LetterContent;
@@ -11,74 +13,73 @@ type LetterPaperProps = {
   endingVisible: boolean;
   instant: boolean;
   reduced: boolean;
+  origin: LetterOrigin | null;
+  onUnfoldComplete: () => void;
+  unfolded: boolean;
+  onGreetingComplete: () => void;
 };
 
-export default function LetterPaper({ content, headingRef, visibleCount, endingVisible, instant, reduced }: LetterPaperProps) {
+export default function LetterPaper({ content, headingRef, visibleCount, endingVisible, instant, reduced, origin, onUnfoldComplete, unfolded, onGreetingComplete }: LetterPaperProps) {
+  const sheet = useRef<HTMLElement>(null);
+
+  useLayoutEffect(() => {
+    const element = sheet.current;
+    if (!element) return;
+    if (!origin || reduced) {
+      onUnfoldComplete();
+      return;
+    }
+    const target = element.getBoundingClientRect();
+    if (!target.width || !target.height) {
+      onUnfoldComplete();
+      return;
+    }
+    const scale = origin.width / target.width;
+    const foldedHeight = Math.min(target.height, origin.height / scale);
+    const fold = `inset(0px 0px ${target.height - foldedHeight}px 0px)`;
+    const animation = element.animate([
+      { transform: `translate(${origin.left - target.left}px, ${origin.top - target.top}px) scale(${scale})`, clipPath: fold, offset: 0 },
+      { transform: "translate(0, 0) scale(1)", clipPath: fold, offset: 0.65 },
+      { transform: "translate(0, 0) scale(1)", clipPath: "inset(0px 0px 0px 0px)", offset: 1 },
+    ], { duration: revealTiming.unfold * 1000, easing: "cubic-bezier(.45, 0, .55, 1)" });
+    animation.onfinish = onUnfoldComplete;
+    return () => { animation.onfinish = null; animation.cancel(); };
+  }, [origin, reduced, onUnfoldComplete]);
+
   return (
-    <div className="paper-rest">
-    <motion.article
+    <div className="paper-rest" style={{ "--paper-unfold-duration": `${revealTiming.unfold}s` } as CSSProperties}>
+    <article
+      ref={sheet}
       className="paper"
-      initial={reduced ? false : {
-        rotateX: 24,
-        rotate: -1.5,
-        scaleY: 0.94,
-        clipPath: "inset(0 0 64% 0)",
-      }}
-      animate={{
-        rotateX: reduced ? 0 : [24, -4, 1, 0],
-        rotate: reduced ? 0 : [-1.5, 0.6, -0.2, -0.35],
-        scaleY: reduced ? 1 : [0.94, 1.012, 0.998, 1],
-        clipPath: reduced ? "inset(0 0 0% 0)" : [
-          "inset(0 0 64% 0)", "inset(0 0 31% 0)", "inset(0 0 0% 0)", "inset(0 0 0% 0)",
-        ],
-      }}
-      transition={{ duration: reduced ? 0 : revealTiming.unfold, times: [0, 0.42, 0.82, 1], ease: [0.22, 1, 0.36, 1] }}
       aria-label="Письмо"
     >
-      <motion.h1
+      <h1
         ref={headingRef}
         tabIndex={-1}
-        className="letter-greeting"
-        initial={instant ? false : { opacity: 0, y: 6 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: instant ? 0 : 0.8, delay: instant ? 0 : revealTiming.unfold }}
-      >{content.greeting}</motion.h1>
+        className={`letter-greeting${unfolded ? " is-shown" : ""}${instant ? " is-instant" : ""}`}
+        style={{ "--greeting-duration": `${revealTiming.greeting}s` } as CSSProperties}
+        onAnimationEnd={(event) => {
+          if (event.animationName === "letter-greeting-appear") onGreetingComplete();
+        }}
+      >{content.greeting}</h1>
       {/* Keep the complete text in the DOM; the reading rhythm is purely visual. */}
       <div className="letter-body">
         {content.paragraphs.map((paragraph, index) => {
           const words = paragraph.split(/(\s+)/);
           const wordCount = words.filter((word) => word.trim()).length;
           return (
-            <motion.p
-              key={index}
-              initial={instant ? "visible" : "hidden"}
-              animate={index < visibleCount ? "visible" : "hidden"}
-              variants={{
-                hidden: { opacity: 0 },
-                visible: {
-                  opacity: 1,
-                  transition: {
-                    duration: instant ? 0 : 0.2,
-                    delayChildren: instant ? 0 : 0.05,
-                    staggerChildren: instant ? 0 : getWordStagger(wordCount),
-                  },
-                },
-              }}
-            >
+            <p key={index} className={`letter-paragraph${index < visibleCount ? " is-revealed" : ""}${instant ? " is-instant" : ""}`}>
               {words.map((word, wordIndex) => word.trim() ? (
-                <motion.span
+                <span
                   key={wordIndex}
                   className="letter-word"
-                  variants={{
-                    hidden: { opacity: 0, y: reduced ? 0 : 3, filter: reduced ? "blur(0px)" : "blur(2px)" },
-                    visible: {
-                      opacity: 1, y: 0, filter: "blur(0px)",
-                      transition: { duration: instant ? 0 : revealTiming.paragraph, ease: [0.22, 1, 0.36, 1] },
-                    },
-                  }}
-                >{word}</motion.span>
+                  style={{
+                    "--word-delay": `${0.05 + Math.floor(wordIndex / 2) * getWordStagger(wordCount)}s`,
+                    "--word-duration": `${revealTiming.paragraph}s`,
+                  } as CSSProperties}
+                >{word}</span>
               ) : word)}
-            </motion.p>
+            </p>
           );
         })}
       </div>
@@ -124,7 +125,6 @@ export default function LetterPaper({ content, headingRef, visibleCount, endingV
           transition={{ duration: instant ? 0 : 1.5, delay: instant ? 0 : 0.35, ease: "easeInOut" }}
         >
           <LetterPhoto content={content} visible={endingVisible} />
-          <figcaption>{content.illustrationCaption}</figcaption>
         </motion.figure>
       </div>
       <motion.div
@@ -137,7 +137,7 @@ export default function LetterPaper({ content, headingRef, visibleCount, endingV
       <span className="paper-corner" aria-hidden="true" />
       <motion.div className="fold fold-one" aria-hidden="true" initial={reduced ? false : { opacity: 1 }} animate={{ opacity: 0.35 }} transition={{ duration: reduced ? 0 : 1.2, delay: reduced ? 0 : 0.4 }} />
       <motion.div className="fold fold-two" aria-hidden="true" initial={reduced ? false : { opacity: 1 }} animate={{ opacity: 0.35 }} transition={{ duration: reduced ? 0 : 1.2, delay: reduced ? 0 : 0.7 }} />
-    </motion.article>
+    </article>
     </div>
   );
 }

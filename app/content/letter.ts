@@ -1,3 +1,5 @@
+type LetterMemory = { src: string; alt: string; caption: string };
+
 export type LetterContent = {
   recipient: string;
   greeting: string;
@@ -7,6 +9,7 @@ export type LetterContent = {
   illustration: string;
   illustrationAlt: string;
   illustrationCaption: string;
+  photos: readonly [LetterMemory, ...LetterMemory[]];
   finalNote: string;
 };
 
@@ -24,5 +27,12 @@ export const letter: LetterContent = {
   illustration: "/mi.jpg",
   illustrationAlt: "Это крутые мы",
   illustrationCaption: "смотри марго какие мы",
+  photos: [
+    { src: "/mi.jpg", alt: "Это крутые мы", caption: "смотри марго какие мы" },
+    { src: "/mi.jpg", alt: "Это крутые мы", caption: "смотри марго какие мы" },
+    { src: "/mi.jpg", alt: "Это крутые мы", caption: "смотри марго какие мы" },
+    { src: "/mi.jpg", alt: "Это крутые мы", caption: "смотри марго какие мы" },
+    { src: "/mi.jpg", alt: "Это крутые мы", caption: "смотри марго какие мы" },
+  ],
   finalNote: "Помни марго ты самое главное что есть у меня",
 };
