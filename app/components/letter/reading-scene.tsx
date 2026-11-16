@@ -4,6 +4,7 @@ import type { LetterContent } from "../../content/letter";
 import { useLetterReveal } from "../../hooks/use-letter-reveal";
 import { useLetterScrollLog } from "../../hooks/use-letter-scroll-log";
 import LetterPaper, { type LetterOrigin } from "./letter-paper";
+import MemoryBox from "./memory-box";
 import { logLetterEvent } from "../../lib/letter-log";
 
 type ReadingSceneProps = {
@@ -56,6 +57,7 @@ export default function ReadingScene({ content, showAll, reduced, origin }: Read
       <div className="after-letter">
         <motion.p initial={false} animate={{ opacity: reveal.complete ? 1 : 0 }} transition={{ duration: instant ? 0 : 0.9 }}>{content.finalNote}</motion.p>
       </div>
+      {reveal.complete && <MemoryBox />}
     </section>
   );
 }

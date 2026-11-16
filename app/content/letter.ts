@@ -1,5 +1,17 @@
 type LetterMemory = { src: string; alt: string; caption: string };
 
+export const kupchinoMemory: LetterMemory = {
+  src: "/photo_5_2026-10-15_19-34-21.jpg",
+  alt: "Наше фото у гаражей в Купчино",
+  caption: "фоткались в гаражах купчино",
+};
+
+export const amogusMemory: LetterMemory = {
+  src: "/photo_1_2026-10-15_19-34-21.jpg",
+  alt: "Фото из воспоминания про амогуса",
+  caption: "помнишь ты амогуса показывала",
+};
+
 export type LetterContent = {
   recipient: string;
   greeting: string;
@@ -29,11 +41,11 @@ export const letter: LetterContent = {
   illustrationCaption: "смотри марго какие мы",
   photos: [
     { src: "/mi.jpg", alt: "Это крутые мы", caption: "смотри марго какие мы" },
-    { src: "/photo_1_2026-10-15_19-34-21.jpg", alt: "амогус", caption: "помнишь ты амогуса показывала" },
+    amogusMemory,
     { src: "/photo_2_2026-10-15_19-34-21.jpg", alt: "шорты", caption: "а это ты мне свои шорты дала" },
     { src: "/photo_3_2026-10-15_19-34-21.jpg", alt: "свастон", caption: "а тут ты случайно легла так" },
     { src: "/photo_4_2026-10-15_19-34-21.jpg", alt: "смурфики", caption: "тут мы смурфикам лизали" },
-    { src: "/photo_5_2026-10-15_19-34-21.jpg", alt: "гаражи", caption: "фоткались в гаражах купчино" },
+    kupchinoMemory,
     { src: "/photo_6_2026-10-15_19-34-21.jpg", alt: "вищенки", caption: "тут у тебя вишенки" },
     { src: "/photo_7_2026-10-15_19-34-21.jpg", alt: "лук сешка", caption: "собрала мне лук в сешке" },
   ],

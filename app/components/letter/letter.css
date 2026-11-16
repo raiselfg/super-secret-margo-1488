@@ -1140,7 +1140,7 @@
   backdrop-filter: blur(8px);
 }
 
-body:has(.photo-dialog[open]) {
+body:has(.photo-dialog[open], .memory-dialog[open]) {
   overflow: hidden;
 }
 
