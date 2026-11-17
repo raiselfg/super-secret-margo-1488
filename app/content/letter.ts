@@ -12,6 +12,20 @@ export const amogusMemory: LetterMemory = {
   caption: "помнишь ты амогуса показывала",
 };
 
+export const thriftMemory: LetterMemory = {
+  src: "/photo_7_2026-10-15_19-34-21.jpg",
+  alt: "Лук из секонда в примерочной",
+  caption: "собрала мне лук в сешке",
+};
+
+export const memoryBoxSurprise = {
+  src: "/mi.jpg",
+  alt: "Мы с Марго вместе",
+  width: 1920,
+  height: 2560,
+  note: "С тобой даже обычный день становится тем самым, который хочется запомнить. Люблю тебя!",
+};
+
 export type LetterContent = {
   recipient: string;
   greeting: string;
@@ -47,7 +61,7 @@ export const letter: LetterContent = {
     { src: "/photo_4_2026-10-15_19-34-21.jpg", alt: "смурфики", caption: "тут мы смурфикам лизали" },
     kupchinoMemory,
     { src: "/photo_6_2026-10-15_19-34-21.jpg", alt: "вищенки", caption: "тут у тебя вишенки" },
-    { src: "/photo_7_2026-10-15_19-34-21.jpg", alt: "лук сешка", caption: "собрала мне лук в сешке" },
+    thriftMemory,
   ],
   finalNote: "Помни марго ты самое главное что есть у меня",
 };

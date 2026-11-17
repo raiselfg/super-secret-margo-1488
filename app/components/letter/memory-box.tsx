@@ -1,18 +1,20 @@
 import Image from "next/image";
 import { useReducedMotion } from "motion/react";
 import { useEffect, useId, useRef, useState } from "react";
-import { amogusMemory, kupchinoMemory } from "../../content/letter";
+import { amogusMemory, kupchinoMemory, letter, memoryBoxSurprise, thriftMemory } from "../../content/letter";
+import OutfitPuzzle from "./outfit-puzzle";
 import "./memory-box.css";
 
 const correctAnswer = "У гаражей в Купчино";
 const answers = ["В парке", correctAnswer, "Во дворе у дома"];
 
-const memoryIds = ["kupchino", "amogus"] as const;
+const memoryIds = ["kupchino", "amogus", "thrift"] as const;
 type MemoryId = (typeof memoryIds)[number];
 
 const memories = {
   kupchino: { ...kupchinoMemory, title: "Гаражи в Купчино", clue: "Фотосессия", action: "Угадать место" },
   amogus: { ...amogusMemory, title: "Амогус", clue: "Амогус", action: "Поймать амогуса" },
+  thrift: { ...thriftMemory, title: "Лук из секонда", clue: "Секонд", action: "Собрать лук" },
 };
 
 const hidingSpots = ["2 / 2", "1 / 3", "3 / 1", "2 / 3"];
@@ -53,13 +55,15 @@ export default function MemoryBox() {
   const dialog = useRef<HTMLDialogElement>(null);
   const title = useRef<HTMLHeadingElement>(null);
   const screenTitle = useRef<HTMLHeadingElement>(null);
+  const surpriseTitle = useRef<HTMLHeadingElement>(null);
   const dialogId = useId();
   const titleId = useId();
   const [selected, setSelected] = useState<MemoryId | null>(null);
-  const [openedMemories, setOpenedMemories] = useState({ kupchino: false, amogus: false });
+  const [openedMemories, setOpenedMemories] = useState({ kupchino: false, amogus: false, thrift: false });
   const [answer, setAnswer] = useState<string>();
   const memory = selected ? memories[selected] : null;
   const revealed = selected !== null && openedMemories[selected];
+  const surpriseUnlocked = memoryIds.every((id) => openedMemories[id]);
 
   useEffect(() => {
     if (dialog.current?.open) (screenTitle.current ?? title.current)?.focus();
@@ -103,6 +107,18 @@ export default function MemoryBox() {
                 <h3 ref={screenTitle} tabIndex={-1} className="memory-box-memory-title">
                   {selected === "amogus" ? "Амогус пойман!" : memory.title}
                 </h3>
+                {surpriseUnlocked && (
+                  <button
+                    className="memory-box-surprise-link"
+                    type="button"
+                    onClick={() => {
+                      surpriseTitle.current?.focus({ preventScroll: true });
+                      surpriseTitle.current?.closest("figure")?.scrollIntoView({ block: "start" });
+                    }}
+                  >
+                    К полароиду ↓
+                  </button>
+                )}
                 <Image
                   src={memory.src}
                   alt={memory.alt}
@@ -116,6 +132,11 @@ export default function MemoryBox() {
               <section>
                 <h3 ref={screenTitle} tabIndex={-1} className="memory-box-memory-title">{memory.clue}</h3>
                 <AmogusChase onCatch={revealMemory} />
+              </section>
+            ) : selected === "thrift" ? (
+              <section>
+                <h3 ref={screenTitle} tabIndex={-1} className="memory-box-memory-title">{memory.clue}</h3>
+                <OutfitPuzzle onSolved={revealMemory} />
               </section>
             ) : (
               <>
@@ -152,6 +173,24 @@ export default function MemoryBox() {
               </button>
             ))}
           </div>
+        )}
+        {surpriseUnlocked && (
+          <figure className="memory-box-polaroid">
+            <Image
+              src={memoryBoxSurprise.src}
+              alt={memoryBoxSurprise.alt}
+              width={memoryBoxSurprise.width}
+              height={memoryBoxSurprise.height}
+              sizes="(max-width: 330px) 74vw, 258px"
+            />
+            <figcaption>
+              <h3 ref={surpriseTitle} tabIndex={-1} className="memory-box-memory-title">
+                Для тебя, Марго
+              </h3>
+              <p>{memoryBoxSurprise.note}</p>
+              <p className="memory-box-polaroid-signature">Твой {letter.signature} ♥</p>
+            </figcaption>
+          </figure>
         )}
       </dialog>
     </div>

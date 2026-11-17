@@ -246,9 +246,148 @@
   box-shadow: inset 0 -3px #6ca8b5;
 }
 
+.memory-box-outfit {
+  display: grid;
+  gap: 10px;
+  margin-top: 10px;
+  font-size: 13px;
+}
+
+.memory-box-outfit fieldset {
+  min-width: 0;
+  text-align: left;
+}
+
+.memory-box-outfit legend {
+  margin-bottom: 5px;
+  font-weight: 600;
+}
+
+.memory-box-outfit-options {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.memory-box-outfit-option {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  min-height: 46px;
+  padding: 6px 8px;
+  border: 1px solid #c9aa88;
+  border-radius: 4px;
+  background: #faeed9;
+  line-height: 1.25;
+  cursor: pointer;
+}
+
+.memory-box-outfit-option:hover {
+  background: #fff7e7;
+}
+
+.memory-box-outfit-option:has(input:checked) {
+  border-color: #785064;
+  background: #f2e4ee;
+  box-shadow: inset 0 0 0 1px #785064;
+}
+
+.memory-box-outfit-option:has(input:focus-visible) {
+  outline: 2px solid #8c5144;
+  outline-offset: 3px;
+}
+
+.memory-box-outfit-option input {
+  position: absolute;
+  opacity: 0;
+}
+
+.memory-box-outfit-option span {
+  flex: 0 0 14px;
+  height: 14px;
+  border: 1px solid #51322e55;
+  border-radius: 50%;
+}
+
+.memory-box-outfit-submit {
+  justify-self: center;
+  margin-top: 3px;
+}
+
+.memory-box-outfit .memory-box-hint {
+  margin-top: 0;
+}
+
+.memory-box-surprise-link {
+  min-height: 44px;
+  padding: 4px 10px;
+  color: #785047;
+  font-size: 13px;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.memory-box-polaroid {
+  position: relative;
+  width: min(100%, 280px);
+  margin: 28px auto 8px;
+  padding: 11px 11px 16px;
+  background: #fffbf2;
+  box-shadow: 0 5px 18px #51322e39;
+  rotate: -1.2deg;
+}
+
+.memory-box-polaroid::before {
+  position: absolute;
+  top: -8px;
+  left: 50%;
+  width: 72px;
+  height: 16px;
+  background: #e9c589b8;
+  content: "";
+  transform: translateX(-50%) rotate(5deg);
+  pointer-events: none;
+}
+
+.memory-box-polaroid img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.memory-box-polaroid figcaption {
+  padding: 10px 5px 0;
+  font: 600 22px/1.1 var(--font-hand), cursive;
+}
+
+.memory-box-polaroid figcaption p {
+  margin-top: 5px;
+}
+
+.memory-box-polaroid .memory-box-polaroid-signature {
+  margin-top: 8px;
+  text-align: right;
+  color: #785047;
+}
+
+@media (min-width: 450px) {
+  .memory-box-cards {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 449px) {
+  .memory-box-card:last-child:nth-child(odd) {
+    grid-column: 1 / -1;
+    min-height: 74px;
+  }
+}
+
 @media (prefers-reduced-motion: no-preference) {
   .memory-dialog[open],
-  .memory-box-photo {
+  .memory-box-photo,
+  .memory-box-polaroid {
     animation: memory-box-reveal 250ms ease-out both;
   }
 
